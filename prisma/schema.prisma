@@ -23,6 +23,7 @@ model Example {
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId            String
     type              String
     provider          String
@@ -34,7 +35,6 @@ model Account {
     scope             String?
     id_token          String? // @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -48,13 +48,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id              String    @id @default(cuid())
+    name            String?
+    email           String?   @unique
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    phone           String?
+    billingAddress  String?
+    shippingAddress String?
+    Invoice         Invoice[]
 }
 
 model VerificationToken {
@@ -63,4 +67,43 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// invoice
+model Invoice {
+    id            String     @id @default(cuid())
+    user          User       @relation(fields: [userId], references: [id])
+    userId        String
+    invoiceNumber String     @unique
+    date          DateTime
+    total         Decimal
+    products      Product[]  @relation("InvoiceProduct")
+    taxes         Tax[]      @relation("InvoiceTax")
+    discounts     Discount[] @relation("InvoiceDiscount")
+}
+
+model Product {
+    id          String    @id @default(cuid())
+    taxId       String?
+    name        String
+    description String?
+    price       Decimal
+    invoices    Invoice[] @relation("InvoiceProduct")
+    Tax         Tax?      @relation(fields: [taxId], references: [id])
+}
+
+model Tax {
+    id       String    @id @default(cuid())
+    name     String
+    rate     Decimal
+    invoices Invoice[] @relation("InvoiceTax")
+    Product  Product[]
+}
+
+model Discount {
+    id       String    @id @default(cuid())
+    name     String
+    rate     Decimal
+    type     String
+    invoices Invoice[] @relation("InvoiceDiscount")
 }
