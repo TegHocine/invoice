@@ -1,8 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
-/** @type {import("eslint").Linter.Config} */
-const config = {
+module.exports = {
   overrides: [
     {
       extends: [
@@ -29,7 +28,16 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "import/order": [
+      "warn",
+      {
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+        "newlines-between": "always",
+      },
+    ],
+    "import/no-unused-modules": "warn",
   },
 };
-
-module.exports = config;
