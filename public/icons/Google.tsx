@@ -5,7 +5,6 @@ export const Google = () => {
       focusable="false"
       data-prefix="fab"
       data-icon="google"
-      className="h-5 w-5"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 488 512"
