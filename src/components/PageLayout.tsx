@@ -1,9 +1,13 @@
 import { type PropsWithChildren } from "react";
+import Sidebar from "./Sidebar";
 
 const PageLayout = (props: PropsWithChildren) => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
-      {props.children}
+    <main className=" h-screen min-h-screen bg-neutral-900 font-roboto text-neutral-100">
+      <div className="flex h-full w-screen">
+        <Sidebar />
+        <div className="h-full w-full">{props.children}</div>
+      </div>
     </main>
   );
 };

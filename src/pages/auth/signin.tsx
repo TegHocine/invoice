@@ -17,10 +17,10 @@ const Signin: NextPage<SignInProps> = ({ providers }) => {
     return;
   };
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-900">
-      <div className="w-full max-w-sm border-y border-gray-700 bg-gray-800 px-4 py-6 shadow sm:rounded-lg sm:border-x sm:px-8">
-        <div className="animate-fade-in flex flex-col justify-center text-center">
-          <span className="text-sm font-medium text-gray-300">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-900">
+      <div className="w-full max-w-sm border-y border-neutral-700 bg-neutral-800 px-4 py-6 shadow sm:rounded-lg sm:border-x sm:px-8">
+        <div className="flex flex-col justify-center text-center">
+          <span className="text-sm font-medium text-neutral-300">
             Sign in with
           </span>
           <div className="mt-6">

@@ -4,8 +4,8 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      gridTemplateColumns: {
-        sidebar: "250px auto",
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },

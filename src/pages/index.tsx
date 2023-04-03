@@ -1,10 +1,9 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
+import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import PageLayout from "~/components/PageLayout";
 
 import { api } from "~/utils/api";
-import { isAuthenticated } from "~/utils/auth";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -17,11 +16,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <div className="grid w-full bg-slate-800 md:grid-cols-sidebar">
-          <div>sidebar</div>
-          <div className="bg-slate-700">sidebar</div>
-        </div>
-
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
             {hello.data ? hello.data.greeting : "Loading tRPC query..."}
@@ -59,13 +53,13 @@ const AuthShowcase: React.FC = () => {
   );
 };
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  return isAuthenticated({
-    context,
-    callback: (session) => {
-      return { props: { session } };
-    },
-  });
-};
+// export const getServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   return isAuthenticated({
+//     context,
+//     callback: (session) => {
+//       return { props: { session } };
+//     },
+//   });
+// };
