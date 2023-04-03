@@ -1,12 +1,22 @@
+import { Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
-import { IoContract } from "react-icons/io5";
+import { useEffect, useState } from "react";
+import { IoClose, IoContract, IoExpand, IoMenu } from "react-icons/io5";
 
 const Sidebar = () => {
   const { data: sessionData } = useSession();
   const [hidden, setHiddden] = useState(true);
   const [lock, setLock] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setLock(window.innerWidth >= 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const sidebarLockToggle = () => {
     setLock((current) => {
@@ -19,32 +29,49 @@ const Sidebar = () => {
     });
   };
 
-  const containerLockClass = lock
-    ? "w-56 border-r border-stone-700"
-    : "w-0 items-center border-0";
-  const lockClass = lock
-    ? "h-full"
-    : "absolute h-[calc(100vh-20vh)] border-r border-y rounded-r-sm border-stone-700 overflow-hidden";
-  const hiddenClass = !lock && hidden ? "-translate-x-full" : "translate-x-0";
-
   return (
     <div
-      className={`relative flex h-full   bg-neutral-800 transition duration-300 ease-in-out ${containerLockClass}`}
+      className={`relative flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
+        lock ? "w-56 border-r border-stone-700" : "w-0 items-center"
+      }`}
     >
       {lock ? null : (
         <button
-          className="absolute left-0 top-0 flex  items-center rounded-sm p-1 transition duration-300 ease-in-out hover:bg-neutral-800"
+          className="absolute left-2 top-2 flex  h-7 w-7 items-center justify-center rounded-sm transition-all duration-300 ease-in-out hover:bg-neutral-800"
           onClick={() => {
             setHiddden((current) => !current);
           }}
         >
-          <IoContract />
+          <div className="relative flex items-center justify-center">
+            <Transition
+              show={hidden}
+              enter="transform transition duration-[400ms]"
+              enterFrom="opacity-0 rotate-[-120deg] scale-50"
+              enterTo="opacity-100 rotate-0 scale-100"
+              className="absolute"
+            >
+              <IoMenu className="h-6 w-6" />
+            </Transition>
+            <Transition
+              show={!hidden}
+              enter="transform transition duration-[400ms]"
+              enterFrom="opacity-0 rotate-[-120deg] scale-50"
+              enterTo="opacity-100 rotate-0 scale-100"
+              className="absolute"
+            >
+              <IoClose className="h-6 w-6" />
+            </Transition>
+          </div>
         </button>
       )}
       <div
-        className={`flex w-56 flex-col bg-neutral-800 ${lockClass} ${hiddenClass} transition duration-300 ease-in-out`}
+        className={`flex w-56 flex-col bg-neutral-800 transition-all duration-300 ease-in-out ${
+          lock
+            ? "h-full"
+            : "absolute h-[calc(100vh-20vh)] overflow-hidden rounded-r-sm border-y border-r border-stone-700"
+        } ${!lock && hidden ? "-translate-x-full" : "translate-x-0"}`}
       >
-        <div className="group flex h-11 items-center justify-between gap-1.5 px-2 transition duration-150 ease-in-out hover:bg-neutral-900">
+        <div className="group flex h-11 items-center justify-between gap-1.5 px-2 transition-all duration-150 ease-in-out hover:bg-neutral-900">
           <div className="flex items-center gap-1.5">
             <Image
               src={sessionData?.user.image || ""}
@@ -58,10 +85,10 @@ const Sidebar = () => {
             </span>
           </div>
           <button
-            className="bg flex items-center rounded-sm p-1  opacity-0 transition duration-300 ease-in-out hover:bg-neutral-800 group-hover:opacity-100"
+            className="bg hidden items-center rounded-sm p-1 opacity-0  transition-all duration-300 ease-in-out hover:bg-neutral-800 group-hover:opacity-100 lg:flex"
             onClick={sidebarLockToggle}
           >
-            <IoContract />
+            {lock ? <IoContract /> : <IoExpand />}
           </button>
         </div>
 
