@@ -1,0 +1,115 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Example {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Account {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id String [pk]
+  sessionToken String [unique, not null]
+  userId String [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id String [pk]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  Invoice Invoice [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table Client {
+  id String [pk]
+  name String [not null]
+  address String [not null]
+  Invoice Invoice [not null]
+}
+
+Table Invoice {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  Client Client [not null]
+  clientId String [not null]
+  invoiceNumber String [unique, not null]
+  date DateTime [not null]
+  total Decimal [not null]
+  products Product [not null]
+  taxes Tax [not null]
+  discounts Discount [not null]
+}
+
+Table Product {
+  id String [pk]
+  taxId String
+  name String [not null]
+  description String
+  price Decimal [not null]
+  invoices Invoice [not null]
+  Tax Tax
+}
+
+Table Tax {
+  id String [pk]
+  name String [not null]
+  rate Decimal [not null]
+  invoices Invoice [not null]
+  Product Product [not null]
+}
+
+Table Discount {
+  id String [pk]
+  name String [not null]
+  rate Decimal [not null]
+  type String [not null]
+  invoices Invoice [not null]
+}
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Invoice.userId > User.id [delete: Cascade]
+
+Ref: Invoice.clientId > Client.id
+
+Ref: Product.taxId > Tax.id

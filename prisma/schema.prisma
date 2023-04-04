@@ -2,120 +2,118 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
 
 model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-// to visualize data
-generator erd {
-    provider = "prisma-erd-generator"
-    output   = "../ERD.svg"
+generator dbml {
+  provider = "prisma-dbml-generator"
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
+  id                String  @id @default(cuid())
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? // @db.Text
+  access_token      String? // @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? // @db.Text
+  session_state     String?
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Invoice       Invoice[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Invoice       Invoice[]
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
+}
+
+model Client {
+  id      String    @id @default(cuid())
+  name    String
+  address String
+  Invoice Invoice[]
 }
 
 // invoice
 model Invoice {
-    id            String     @id @default(cuid())
-    user          User       @relation(fields: [userId], references: [id])
-    userId        String
-    Client        Client     @relation(fields: [clientId], references: [id])
-    clientId      String
-    invoiceNumber String     @unique
-    date          DateTime
-    total         Decimal
-    products      Product[]  @relation("InvoiceProduct")
-    taxes         Tax[]      @relation("InvoiceTax")
-    discounts     Discount[] @relation("InvoiceDiscount")
+  id            String     @id @default(cuid())
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  Client        Client     @relation(fields: [clientId], references: [id])
+  clientId      String
+  invoiceNumber String     @unique
+  date          DateTime
+  total         Decimal
+  products      Product[]  @relation("InvoiceProduct")
+  taxes         Tax[]      @relation("InvoiceTax")
+  discounts     Discount[] @relation("InvoiceDiscount")
 }
 
 model Product {
-    id          String    @id @default(cuid())
-    taxId       String?
-    name        String
-    description String?
-    price       Decimal
-    invoices    Invoice[] @relation("InvoiceProduct")
-    Tax         Tax?      @relation(fields: [taxId], references: [id])
-}
-
-model Tax {
-    id       String    @id @default(cuid())
-    name     String
-    rate     Decimal
-    invoices Invoice[] @relation("InvoiceTax")
-    Product  Product[]
+  id          String    @id @default(cuid())
+  Tax         Tax?      @relation(fields: [taxId], references: [id])
+  taxId       String?
+  name        String
+  description String?
+  price       Decimal
+  invoices    Invoice[] @relation("InvoiceProduct")
 }
 
 model Discount {
-    id       String    @id @default(cuid())
-    name     String
-    rate     Decimal
-    type     String
-    invoices Invoice[] @relation("InvoiceDiscount")
+  id       String    @id @default(cuid())
+  name     String
+  rate     Decimal
+  type     String
+  invoices Invoice[] @relation("InvoiceDiscount")
 }
 
-model Client {
-    id      String    @id @default(cuid())
-    name    String
-    address String
-    Invoice Invoice[]
+model Tax {
+  id       String    @id @default(cuid())
+  name     String
+  rate     Decimal
+  invoices Invoice[] @relation("InvoiceTax")
+  Product  Product[]
 }
