@@ -20,6 +20,12 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+// to visualize data
+generator erd {
+    provider = "prisma-erd-generator"
+    output   = "../ERD.svg"
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -48,17 +54,14 @@ model Session {
 }
 
 model User {
-    id              String    @id @default(cuid())
-    name            String?
-    email           String?   @unique
-    emailVerified   DateTime?
-    image           String?
-    accounts        Account[]
-    sessions        Session[]
-    phone           String?
-    billingAddress  String?
-    shippingAddress String?
-    Invoice         Invoice[]
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    Invoice       Invoice[]
 }
 
 model VerificationToken {
@@ -74,6 +77,8 @@ model Invoice {
     id            String     @id @default(cuid())
     user          User       @relation(fields: [userId], references: [id])
     userId        String
+    Client        Client     @relation(fields: [clientId], references: [id])
+    clientId      String
     invoiceNumber String     @unique
     date          DateTime
     total         Decimal
@@ -106,4 +111,11 @@ model Discount {
     rate     Decimal
     type     String
     invoices Invoice[] @relation("InvoiceDiscount")
+}
+
+model Client {
+    id      String    @id @default(cuid())
+    name    String
+    address String
+    Invoice Invoice[]
 }
