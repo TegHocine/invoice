@@ -36,17 +36,6 @@ Table Session {
   user User [not null]
 }
 
-Table User {
-  id String [pk]
-  name String
-  email String [unique]
-  emailVerified DateTime
-  image String
-  accounts Account [not null]
-  sessions Session [not null]
-  Invoice Invoice [not null]
-}
-
 Table VerificationToken {
   identifier String [not null]
   token String [unique, not null]
@@ -57,8 +46,23 @@ Table VerificationToken {
   }
 }
 
+Table User {
+  id String [pk]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  clients Client [not null]
+  invoices Invoice [not null]
+  Product Product [not null]
+}
+
 Table Client {
   id String [pk]
+  user User [not null]
+  userId String [not null]
   name String [not null]
   address String [not null]
   Invoice Invoice [not null]
@@ -73,34 +77,18 @@ Table Invoice {
   invoiceNumber String [unique, not null]
   date DateTime [not null]
   total Decimal [not null]
+  status String [not null, default: 'draft']
   products Product [not null]
-  taxes Tax [not null]
-  discounts Discount [not null]
 }
 
 Table Product {
   id String [pk]
-  taxId String
+  user User [not null]
+  userId String [not null]
   name String [not null]
   description String
   price Decimal [not null]
-  invoices Invoice [not null]
-  Tax Tax
-}
-
-Table Tax {
-  id String [pk]
-  name String [not null]
-  rate Decimal [not null]
-  invoices Invoice [not null]
-  Product Product [not null]
-}
-
-Table Discount {
-  id String [pk]
-  name String [not null]
-  rate Decimal [not null]
-  type String [not null]
+  quantity Int [not null]
   invoices Invoice [not null]
 }
 
@@ -108,8 +96,10 @@ Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
 
+Ref: Client.userId > User.id [delete: Cascade]
+
 Ref: Invoice.userId > User.id [delete: Cascade]
 
 Ref: Invoice.clientId > Client.id
 
-Ref: Product.taxId > Tax.id
+Ref: Product.userId > User.id [delete: Cascade]

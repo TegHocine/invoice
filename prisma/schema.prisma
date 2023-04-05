@@ -51,6 +51,14 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -61,14 +69,7 @@ model User {
   sessions      Session[]
   clients       Client[]
   invoices      Invoice[]
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+  Product       Product[]
 }
 
 model Client {
@@ -96,6 +97,8 @@ model Invoice {
 
 model Product {
   id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
   name        String
   description String?
   price       Decimal
