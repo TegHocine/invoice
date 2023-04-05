@@ -59,7 +59,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Invoice       Invoice[]
+  clients       Client[]
+  invoices      Invoice[]
 }
 
 model VerificationToken {
@@ -72,6 +73,8 @@ model VerificationToken {
 
 model Client {
   id      String    @id @default(cuid())
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
   name    String
   address String
   Invoice Invoice[]
@@ -79,41 +82,23 @@ model Client {
 
 // invoice
 model Invoice {
-  id            String     @id @default(cuid())
-  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  Client        Client     @relation(fields: [clientId], references: [id])
+  Client        Client    @relation(fields: [clientId], references: [id])
   clientId      String
-  invoiceNumber String     @unique
+  invoiceNumber String    @unique
   date          DateTime
   total         Decimal
-  products      Product[]  @relation("InvoiceProduct")
-  taxes         Tax[]      @relation("InvoiceTax")
-  discounts     Discount[] @relation("InvoiceDiscount")
+  status        String    @default("draft")
+  products      Product[] @relation("InvoiceProduct")
 }
 
 model Product {
   id          String    @id @default(cuid())
-  Tax         Tax?      @relation(fields: [taxId], references: [id])
-  taxId       String?
   name        String
   description String?
   price       Decimal
+  quantity    Int
   invoices    Invoice[] @relation("InvoiceProduct")
-}
-
-model Discount {
-  id       String    @id @default(cuid())
-  name     String
-  rate     Decimal
-  type     String
-  invoices Invoice[] @relation("InvoiceDiscount")
-}
-
-model Tax {
-  id       String    @id @default(cuid())
-  name     String
-  rate     Decimal
-  invoices Invoice[] @relation("InvoiceTax")
-  Product  Product[]
 }
