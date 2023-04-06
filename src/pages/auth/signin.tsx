@@ -2,7 +2,7 @@ import { type GetServerSideProps, type NextPage } from "next";
 import { type Provider } from "next-auth/providers";
 import { getProviders, signIn } from "next-auth/react";
 
-import { Google } from "public/icons";
+import { AiOutlineGoogle } from "react-icons/ai";
 import Button from "~/components/Button";
 
 type SignInProps = {
@@ -24,7 +24,11 @@ const Signin: NextPage<SignInProps> = ({ providers }) => {
             Sign in with
           </span>
           <div className="mt-6">
-            <Button onClick={handleClick} Icon={Google} title="google" />
+            <Button
+              onClick={handleClick}
+              icon={<AiOutlineGoogle className="h-6 w-6" />}
+              title="google"
+            />
           </div>
         </div>
       </div>

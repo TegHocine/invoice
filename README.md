@@ -1,6 +1,6 @@
 # Color using tailwind
 
-gray 900 for background,
-gray 800 for surface,
-gray 700 for border,
-gray 100 for text,
+neutral 900 for background,
+neutral 800 for surface,
+neutral 700 for border,
+neutral 100 for text,

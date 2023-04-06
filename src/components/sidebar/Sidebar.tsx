@@ -2,7 +2,14 @@ import { Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { IoClose, IoContract, IoExpand, IoMenu } from "react-icons/io5";
+import {
+  AiFillHome,
+  AiOutlineClose,
+  AiOutlineDoubleLeft,
+  AiOutlineDoubleRight,
+  AiOutlineMenu,
+} from "react-icons/ai";
+import SidebarNavItem from "./SidebarNavItem";
 
 const Sidebar = () => {
   const { data: sessionData } = useSession();
@@ -32,7 +39,7 @@ const Sidebar = () => {
   return (
     <div
       className={`relative flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
-        lock ? "w-56 border-r border-stone-700" : "w-0 items-center"
+        lock ? "w-56 border-r border-neutral-700" : "w-0 items-center"
       }`}
     >
       {lock ? null : (
@@ -50,7 +57,7 @@ const Sidebar = () => {
               enterTo="opacity-100 rotate-0 scale-100"
               className="absolute"
             >
-              <IoMenu className="h-6 w-6" />
+              <AiOutlineMenu className="h-6 w-6" />
             </Transition>
             <Transition
               show={!hidden}
@@ -59,7 +66,7 @@ const Sidebar = () => {
               enterTo="opacity-100 rotate-0 scale-100"
               className="absolute"
             >
-              <IoClose className="h-6 w-6" />
+              <AiOutlineClose className="h-6 w-6" />
             </Transition>
           </div>
         </button>
@@ -68,10 +75,10 @@ const Sidebar = () => {
         className={`flex w-56 flex-col bg-neutral-800 transition-all duration-300 ease-in-out ${
           lock
             ? "h-full"
-            : "absolute h-[calc(100vh-20vh)] overflow-hidden rounded-r-sm border-y border-r border-stone-700"
+            : "absolute h-[calc(100vh-20vh)] overflow-hidden rounded-r-sm border-y border-r border-neutral-700"
         } ${!lock && hidden ? "-translate-x-full" : "translate-x-0"}`}
       >
-        <div className="group flex h-11 items-center justify-between gap-1.5 px-2 transition-all duration-150 ease-in-out hover:bg-neutral-900">
+        <div className="group flex h-11 items-center justify-between gap-1.5 px-4 transition-all duration-150 ease-in-out hover:bg-neutral-900">
           <div className="flex items-center gap-1.5">
             <Image
               src={sessionData?.user.image || ""}
@@ -88,15 +95,15 @@ const Sidebar = () => {
             className="bg hidden items-center rounded-sm p-1 opacity-0  transition-all duration-300 ease-in-out hover:bg-neutral-800 group-hover:opacity-100 lg:flex"
             onClick={sidebarLockToggle}
           >
-            {lock ? <IoContract /> : <IoExpand />}
+            {lock ? <AiOutlineDoubleLeft /> : <AiOutlineDoubleRight />}
           </button>
         </div>
 
         <ul>
-          <li>links or content</li>
-          <li>links or content</li>
-          <li>links or content</li>
-          <li>links or content</li>
+          <SidebarNavItem href="/" title="home" icon={<AiFillHome />} />
+          <SidebarNavItem href="/" title="home" icon={<AiFillHome />} />
+          <SidebarNavItem href="/" title="home" icon={<AiFillHome />} />
+          <SidebarNavItem href="/" title="home" icon={<AiFillHome />} />
         </ul>
       </div>
     </div>
