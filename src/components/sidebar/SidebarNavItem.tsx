@@ -11,12 +11,10 @@ const SidebarNavItem: React.FC<Props> = ({ icon, title, href }) => {
     <li className="w-full px-1">
       <Link
         href={href}
-        className="flex  w-full items-center gap-2 rounded-sm px-3 py-1 text-neutral-300 hover:bg-neutral-900"
+        className="flex w-full items-center gap-2 truncate rounded-sm px-3 py-1 text-neutral-300 hover:bg-neutral-900"
       >
-        {icon ?? null}
-        <p className="flex h-full items-center truncate align-middle text-base capitalize">
-          {title}
-        </p>
+        <span>{icon ?? null}</span>
+        <p className="truncate text-base capitalize">{title}</p>
       </Link>
     </li>
   );

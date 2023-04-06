@@ -78,18 +78,18 @@ const Sidebar = () => {
             : "absolute h-[calc(100vh-20vh)] overflow-hidden rounded-r-sm border-y border-r border-neutral-700"
         } ${!lock && hidden ? "-translate-x-full" : "translate-x-0"}`}
       >
-        <div className="group flex h-11 items-center justify-between gap-1.5 px-4 transition-all duration-150 ease-in-out hover:bg-neutral-900">
-          <div className="flex items-center gap-1.5">
+        <div className="group flex h-11 w-full items-center justify-between gap-1.5 px-4 transition-all duration-150 ease-in-out hover:bg-neutral-900">
+          <div className="flex items-center gap-1.5 truncate">
             <Image
-              src={sessionData?.user.image || ""}
+              src={sessionData?.user.image ?? ""}
               width={22}
               height={22}
               alt="avatar"
               className="flex items-center justify-center rounded-full bg-neutral-700"
             />
-            <span className="truncate text-base font-medium text-neutral-300">
-              {sessionData?.user.name || "User Name"}
-            </span>
+            <p className="truncate text-base font-medium text-neutral-300">
+              {sessionData?.user.name ?? "User Name"}
+            </p>
           </div>
           <button
             className="bg hidden items-center rounded-sm p-1 opacity-0  transition-all duration-300 ease-in-out hover:bg-neutral-800 group-hover:opacity-100 lg:flex"
