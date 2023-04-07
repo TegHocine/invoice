@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`relative flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
+      className={`flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
         lock ? "w-56 border-r border-neutral-700" : "w-0 items-center"
       }`}
     >
