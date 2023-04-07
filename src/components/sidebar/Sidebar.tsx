@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
+      className={`relative flex h-full bg-neutral-800 transition-all duration-300 ease-in-out ${
         lock ? "w-56 border-r border-neutral-700" : "w-0 items-center"
       }`}
     >
@@ -69,7 +69,7 @@ const Sidebar = () => {
         className={`flex w-56 flex-col bg-neutral-800 transition-all duration-300 ease-in-out ${
           lock
             ? "h-full"
-            : "absolute h-[calc(100vh-20vh)] rounded-r-sm border-y border-r border-neutral-700"
+            : "fixed h-[calc(100vh-20vh)] rounded-r-sm border-y border-r border-neutral-700"
         } ${!lock && hidden ? "-translate-x-full" : "translate-x-0"}`}
       >
         <SidebarHeader
